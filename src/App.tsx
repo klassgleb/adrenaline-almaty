@@ -236,7 +236,7 @@ function TrainerProfileDrawer({trainer,onClose}:{trainer:Trainer,onClose:()=>voi
         <span className="trainer-profile-club"><MapPin size={15}/> Работает в клубе Adrenaline {trainer.club.replace('На ','')}</span>
         <div className="trainer-about"><h3>О тренере</h3><p>{trainer.about}</p></div>
         <div className="trainer-skills"><h3>Специализация</h3><div>{trainer.skills.map(skill=><span key={skill}>{skill}</span>)}</div></div>
-        {trainer.video&&<iframe className="trainer-video" src={trainer.video} title={`Видеовизитка ${trainer.name}`} loading="lazy" allowFullScreen/>}
+        {trainer.video&&<video className="trainer-video" src={trainer.video} muted loop controls preload="metadata" playsInline title={`Видеовизитка ${trainer.name}`}/>}
         <div className="trainer-cta">
           <span>ПЕРСОНАЛЬНАЯ ТРЕНИРОВКА</span>
           <h3>Персональная тренировка с {trainer.name}</h3>
