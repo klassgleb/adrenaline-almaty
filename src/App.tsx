@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, Check, ChevronDown, CreditCard, Dumbbell, Instagram, MapPin, Menu, Minus, Plus, Smartphone, X } from 'lucide-react'
-import { clubs, directions, trainers, type Club } from './data/adrenalineData'
+import { ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, CreditCard, Dumbbell, Instagram, MapPin, Menu, Smartphone, X } from 'lucide-react'
+import { clubs, directions, trainers, type Club, type Trainer } from './data/adrenalineData'
 
 type Duration = 1 | 3 | 6 | 12
 type Payment = 'kaspi' | 'card' | 'installment'
@@ -154,12 +154,106 @@ function TariffCard({title,badge,price,duration,visitPrice,features,featured=fal
 }
 
 function TrainersSection({onBook}:{onBook:()=>void}) {
+  const [clubFilter,setClubFilter]=useState('all')
+  const [selectedTrainer,setSelectedTrainer]=useState<Trainer|null>(null)
+  const [page,setPage]=useState(0)
+  const visible=clubFilter==='all'?trainers:trainers.filter(t=>t.clubId===clubFilter)
+  const clubOptions=[
+    {id:'all',label:'Все'},
+    {id:'dostyk',label:'Достык'},
+    {id:'kaldayakova',label:'ADK'},
+  ]
+  const scrollToPage=(direction:-1|1)=>{
+    const next=Math.max(0,Math.min(Math.max(0,visible.length-3),page+direction))
+    setPage(next)
+  }
   return <section className="section trainers-section" id="trainers">
-    <div className="section-head"><div><div className="kicker">КОМАНДА</div><h2>Рядом с сильными</h2></div><p>Квалифицированные тренеры помогут поставить технику и сделать прогресс стабильным.</p></div>
-    <div className="trainer-grid">{trainers.map((t,i)=><motion.article key={t.name} initial={{opacity:0,y:18}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*.08}}>
-      <img src={t.image} alt={t.name} loading="lazy" decoding="async" width="700" height="800"/><div className="trainer-copy"><h3>{t.name}</h3><p>{t.role}</p><button onClick={onBook}>Записаться <ArrowRight size={15}/></button></div>
-    </motion.article>)}</div>
+    <div className="section-head"><div><div className="kicker">КОМАНДА</div><h2>Элита фитнеса Алматы: Наши тренеры</h2></div><p>Квалифицированные тренеры помогут поставить технику и сделать прогресс стабильным.</p></div>
+    <div className="trainer-toolbar">
+      <div className="trainer-tabs" role="tablist" aria-label="Фильтр тренеров по клубу">
+        {clubOptions.map(option=><button key={option.id} className={clubFilter===option.id?'active':''} onClick={()=>{setClubFilter(option.id);setPage(0)}}>{option.label}</button>)}
+      </div>
+      <div className="trainer-arrows">
+        <button onClick={()=>scrollToPage(-1)} disabled={page===0} aria-label="Предыдущие тренеры"><ChevronLeft size={18}/></button>
+        <button onClick={()=>scrollToPage(1)} disabled={visible.length<=3||page>=visible.length-3} aria-label="Следующие тренеры"><ChevronRight size={18}/></button>
+      </div>
+    </div>
+    {visible.length===0?<div className="trainer-empty">Для выбранного клуба актуальный состав тренеров уточняется на ресепшн.</div>:<div className="trainer-grid">
+      {visible.slice(page,page+3).map((trainer,index)=><motion.article key={trainer.name} initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true,amount:.15}} transition={{delay:index*.07}}>
+        <img src={trainer.image} alt={trainer.name} loading="lazy" decoding="async" width="700" height="800"/>
+        <div className="trainer-shade"/>
+        <span className="trainer-club">{trainer.club}</span>
+        <div className="trainer-copy"><h3>{trainer.name}</h3><p>{trainer.category}</p><button onClick={()=>setSelectedTrainer(trainer)}>Подробнее <ArrowRight size={15}/></button></div>
+      </motion.article>)}
+    </div>}
+    <AnimatePresence>{selectedTrainer&&<TrainerProfileDrawer trainer={selectedTrainer} onClose={()=>setSelectedTrainer(null)}/>}</AnimatePresence>
   </section>
+}
+
+function TrainerProfileDrawer({trainer,onClose}:{trainer:Trainer,onClose:()=>void}) {
+  const [booking,setBooking]=useState(false)
+  const [sent,setSent]=useState(false)
+  const [name,setName]=useState('')
+  const [phone,setPhone]=useState('+7 ')
+
+  const phoneMask=(value:string)=>{
+    const digits=value.replace(/\D/g,'').slice(0,11)
+    let result='+7 '
+    if(digits.length>1)result+='('+digits.slice(1,4)
+    if(digits.length>=4)result+=') '
+    if(digits.length>=5)result+=digits.slice(4,7)
+    if(digits.length>=8)result+='-'+digits.slice(7,9)
+    if(digits.length>=10)result+='-'+digits.slice(9,11)
+    return result
+  }
+
+  const submit=()=>{
+    if(name.trim().length<2||phone.replace(/\D/g,'').length!==11)return
+    const request={
+      trainer:trainer.name,
+      club:trainer.club,
+      name:name.trim(),
+      phone,
+      createdAt:new Date().toISOString(),
+      type:'trainer_booking',
+    }
+    const stored=JSON.parse(localStorage.getItem('adrenaline-trainer-leads')||'[]') as unknown[]
+    localStorage.setItem('adrenaline-trainer-leads',JSON.stringify([request,...stored].slice(0,50)))
+    setSent(true)
+  }
+
+  return <>
+    <motion.div className="drawer-backdrop" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={onClose}/>
+    <motion.aside className="trainer-profile-drawer" initial={{x:'100%'}} animate={{x:0}} exit={{x:'100%'}} transition={{type:'spring',damping:28,stiffness:260}} role="dialog" aria-modal="true" aria-label={`Профиль тренера ${trainer.name}`}>
+      <button className="icon-button trainer-profile-close" onClick={onClose} aria-label="Закрыть"><X size={20}/></button>
+      <div className="trainer-profile-media">
+        <img src={trainer.image} alt={trainer.name}/>
+      </div>
+      <div className="trainer-profile-content">
+        <div className="kicker">PRO TEAM · ADRENALINE</div>
+        <h2>{trainer.name}</h2>
+        <p className="trainer-category">{trainer.category}</p>
+        <span className="trainer-profile-club"><MapPin size={15}/> Работает в клубе Adrenaline {trainer.club.replace('На ','')}</span>
+        <div className="trainer-about"><h3>О тренере</h3><p>{trainer.about}</p></div>
+        <div className="trainer-skills"><h3>Специализация</h3><div>{trainer.skills.map(skill=><span key={skill}>{skill}</span>)}</div></div>
+        {trainer.video&&<iframe className="trainer-video" src={trainer.video} title={`Видеовизитка ${trainer.name}`} loading="lazy" allowFullScreen/>}
+        <div className="trainer-cta">
+          <span>ПЕРСОНАЛЬНАЯ ТРЕНИРОВКА</span>
+          <h3>Персональная тренировка с {trainer.name}</h3>
+          <button className="button button-lime" onClick={()=>{setBooking(true);setSent(false)}}>Записаться на пробное занятие <ArrowRight size={17}/></button>
+        </div>
+      </div>
+      <AnimatePresence>{booking&&<motion.div className="trainer-booking" initial={{x:'100%'}} animate={{x:0}} exit={{x:'100%'}} transition={{type:'spring',damping:28,stiffness:260}}>
+        <button className="icon-button trainer-profile-close" onClick={()=>setBooking(false)} aria-label="Назад"><ChevronRight size={20}/></button>
+        {sent?<div className="trainer-booking-success"><div className="success-mark"><Check size={28}/></div><h3>Заявка отправлена</h3><p>Администратор свяжется с вами для записи к тренеру {trainer.name}.</p><button className="button button-dark" onClick={()=>{setBooking(false);onClose()}}>Готово</button></div>:<div className="trainer-booking-form">
+          <div className="kicker">ЗАЯВКА К ТРЕНЕРУ</div><h2>{trainer.name}</h2><p>Оставьте номер — и мы подберём удобное время первой встречи.</p>
+          <label className="field">Ваше имя<input value={name} onChange={e=>setName(e.target.value)} placeholder="Имя"/></label>
+          <label className="field">Ваш телефон<input value={phone} onChange={e=>setPhone(phoneMask(e.target.value))} inputMode="tel" placeholder="+7 (7XX) XXX-XX-XX"/></label>
+          <button className="button button-lime" disabled={name.trim().length<2||phone.replace(/\D/g,'').length!==11} onClick={submit}>Отправить заявку <ArrowRight size={17}/></button>
+        </div>}
+      </motion.div>}</AnimatePresence>
+    </motion.aside>
+  </>
 }
 
 function TrustSection() {
