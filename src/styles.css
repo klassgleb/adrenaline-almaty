@@ -96,3 +96,60 @@ footer{background:var(--ink);color:#fff;padding:60px max(24px,7vw) 20px}.footer-
   .footer-main{grid-template-columns:1fr}
   .footer-main>div:first-child{grid-column:auto}
 }
+
+.trainer-toolbar{display:flex;justify-content:space-between;align-items:center;margin:-8px 0 22px}
+.trainer-tabs{display:flex;gap:8px}
+.trainer-tabs button{border:1px solid var(--line);background:#fff;border-radius:999px;height:42px;padding:0 15px;font-size:12px;font-weight:700}
+.trainer-tabs button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.trainer-arrows{display:flex;gap:8px}
+.trainer-arrows button{width:42px;height:42px;border:1px solid var(--line);border-radius:50%;background:#fff;display:grid;place-items:center}
+.trainer-arrows button:disabled{opacity:.35}
+.trainer-grid article{height:520px}
+.trainer-grid img{height:100%;aspect-ratio:3/4}
+.trainer-grid article:after{display:none}
+.trainer-shade{position:absolute;inset:45% 0 0;background:linear-gradient(transparent,rgba(8,10,10,.9))}
+.trainer-club{position:absolute;z-index:3;top:16px;left:16px;border-radius:999px;background:rgba(255,255,255,.88);backdrop-filter:blur(8px);padding:8px 10px;font-size:10px;font-weight:800}
+.trainer-copy h3{font-size:21px}
+.trainer-empty{border:1px solid var(--line);border-radius:18px;padding:32px;text-align:center;color:var(--muted)}
+.trainer-profile-drawer{position:fixed;z-index:100;right:0;top:0;height:100dvh;width:min(860px,92vw);background:rgba(255,255,255,.96);backdrop-filter:blur(18px);box-shadow:-20px 0 60px rgba(0,0,0,.18);overflow-y:auto;display:grid;grid-template-columns:minmax(260px,.75fr) 1fr}
+.trainer-profile-close{position:absolute;z-index:5;right:16px;top:16px}
+.trainer-profile-media{min-height:100dvh;background:#111315}
+.trainer-profile-media img{height:100%;object-position:center top}
+.trainer-profile-content{padding:54px 38px 36px;overflow-y:auto}
+.trainer-profile-content h2{font-size:38px;letter-spacing:-2px;margin:12px 0 4px}
+.trainer-category{color:var(--muted);margin:0 0 14px}
+.trainer-profile-club{display:inline-flex;align-items:center;gap:7px;border-radius:999px;background:#edf2df;padding:8px 10px;font-size:10px;font-weight:800}
+.trainer-about,.trainer-skills{margin-top:28px}
+.trainer-about h3,.trainer-skills h3{font-family:Inter,sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin:0 0 9px}
+.trainer-about p{color:var(--muted);line-height:1.7;font-size:13px}
+.trainer-skills>div{display:flex;flex-wrap:wrap;gap:7px}
+.trainer-skills span{border:1px solid var(--line);border-radius:999px;padding:8px 10px;font-size:11px}
+.trainer-video{width:100%;aspect-ratio:16/9;border:0;border-radius:16px;margin-top:24px}
+.trainer-cta{margin-top:28px;border-radius:18px;background:var(--ink);color:#fff;padding:18px}
+.trainer-cta>span{font-size:9px;color:var(--lime);letter-spacing:1.5px;font-weight:800}
+.trainer-cta h3{font-size:17px;line-height:1.25;margin:7px 0 14px}
+.trainer-cta .button{width:100%}
+.trainer-booking{position:absolute;z-index:6;right:0;top:0;width:50%;height:100%;background:#fff;box-shadow:-12px 0 40px rgba(0,0,0,.12);padding:46px 34px}
+.trainer-booking-form h2{font-size:30px;margin:10px 0 8px}
+.trainer-booking-form>p{color:var(--muted);font-size:13px;line-height:1.5;margin-bottom:24px}
+.trainer-booking-form .button{width:100%;margin-top:8px}
+.trainer-booking-form .button:disabled{opacity:.45}
+.trainer-booking-success{text-align:center;padding-top:120px}
+.trainer-booking-success p{color:var(--muted);line-height:1.6}
+.trainer-booking-success .button{margin-top:16px}
+
+@media(max-width:700px){
+  .trainer-toolbar{align-items:flex-end;gap:10px}
+  .trainer-tabs{overflow-x:auto;max-width:calc(100% - 96px);padding-bottom:4px}
+  .trainer-tabs button{white-space:nowrap;height:40px}
+  .trainer-arrows{flex-shrink:0}
+  .trainer-grid article{height:430px}
+  .trainer-profile-drawer{width:100%;grid-template-columns:1fr;display:block}
+  .trainer-profile-media{height:42dvh;min-height:300px}
+  .trainer-profile-content{height:auto;padding:28px 18px 32px;overflow:visible}
+  .trainer-profile-content h2{font-size:32px}
+  .trainer-profile-club{font-size:9px}
+  .trainer-cta{position:relative}
+  .trainer-booking{width:100%;padding:48px 18px}
+  .trainer-booking-success{padding-top:100px}
+}
