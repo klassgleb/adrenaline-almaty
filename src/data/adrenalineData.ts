@@ -24,10 +24,99 @@ export const clubs: Club[] = [
   { id:'samal', name:'На Самале', address:'район Самал, Алматы', schedule:'Ежедневно · уточните часы на ресепшн', area:'1200 м²', equipment:200, lockers:210, showers:12, image:'https://adrenaline.kz/storage/app/media/gallery/na-samale/1.webp', description:'Просторный зал с премиальными тренажёрами Hoist, боевыми искусствами и широким залом групповых программ.', features:['Тренажёры Hoist','MMA / Бокс','Групповые занятия','Фито-бар'], prices:{daily:28000,month:40000,three:90000,six:170000,year:240000}},
 ]
 
-export const trainers = [
-  { name:'Анжела', role:'Стретчинг · хореография', image:'https://images.unsplash.com/photo-1594381898411-846e7d193883?auto=format&fit=crop&w=900&q=85' },
-  { name:'Руслан', role:'MMA · боевые искусства', image:'https://images.unsplash.com/photo-1534367610401-9f5ed68180aa?auto=format&fit=crop&w=900&q=85' },
-  { name:'Салтанат', role:'Йога · осанка', image:'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=85' },
+export type Trainer = {
+  name: string
+  category: string
+  club: string
+  clubId: string
+  image: string
+  skills: string[]
+  about: string
+  video?: string
+}
+
+export const trainers: Trainer[] = [
+  {
+    name:'Анжела',
+    category:'Инструктор групповых программ',
+    club:'На Шашкина',
+    clubId:'shashkina',
+    image:'https://images.unsplash.com/photo-1594381898411-846e7d193883?auto=format&fit=crop&w=900&q=85',
+    skills:['Стретчинг','Фитнес микс','Современная хореография','Групповые программы'],
+    about:'Тренер по направлению стретчинга, хореографии и фитнес-микса. Помогает улучшить гибкость, осанку и качество техники в групповых тренировках.',
+  },
+  {
+    name:'Салтанат',
+    category:'Инструктор по йоге и осанке',
+    club:'На Шашкина',
+    clubId:'shashkina',
+    image:'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=85',
+    skills:['Йога','Здоровая осанка','Стретчинг','Восстановление'],
+    about:'Специалист по йоге и здоровой осанке. Формирует последовательный план занятий для мобильности, баланса и осознанной работы с телом.',
+  },
+  {
+    name:'Руслан',
+    category:'Тренер по боевым искусствам',
+    club:'На Самале',
+    clubId:'samal',
+    image:'https://images.unsplash.com/photo-1534367610401-9f5ed68180aa?auto=format&fit=crop&w=900&q=85',
+    skills:['MMA','Кикбоксинг','Функциональный тренинг','Самооборона'],
+    about:'Тренер по MMA и кикбоксингу. Занятия направлены на технику ударов, выносливость, уверенность в движении и безопасную подготовку.',
+  },
+  {
+    name:'Дархан',
+    category:'Тренер по боксу',
+    club:'На Шашкина',
+    clubId:'shashkina',
+    image:'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?auto=format&fit=crop&w=900&q=85',
+    skills:['Бокс','Ударная техника','Работа в партере','Выносливость'],
+    about:'Инструктор бокса для начинающих и продолжающих. Развивает технику ударов, координацию и общую физическую подготовку.',
+  },
+  {
+    name:'Ян',
+    category:'Инструктор Cycle',
+    club:'На Шашкина',
+    clubId:'shashkina',
+    image:'https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=900&q=85',
+    skills:['Сайкл','Кардио','Интервальная тренировка','Выносливость'],
+    about:'Инструктор сайкл-занятий. Работает с различными уровнями нагрузки для улучшения кардио-подготовки и развития выносливости.',
+  },
+  {
+    name:'Нурлан',
+    category:'Тренер по боксу',
+    club:'На Шашкина',
+    clubId:'shashkina',
+    image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=85',
+    skills:['Бокс','Функциональный тренинг','Техника защиты','Выносливость'],
+    about:'Тренер по боксу с акцентом на технику, защиту и стабильный прогресс. Подходит для индивидуальной и групповой подготовки.',
+  },
+  {
+    name:'Ксения',
+    category:'Инструктор Body Pump и стретчинга',
+    club:'На Самале',
+    clubId:'samal',
+    image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=85',
+    skills:['Body Pump','Стретчинг','Силовая программа','Техника упражнений'],
+    about:'Ведёт силовые и восстановительные направления. Помогает подобрать рабочие веса и безопасно улучшать технику упражнений.',
+  },
+  {
+    name:'Думан',
+    category:'Инструктор единоборств',
+    club:'На Самале',
+    clubId:'samal',
+    image:'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?auto=format&fit=crop&w=900&q=85',
+    skills:['Кикбоксинг','Бокс','Functional Gym','Самооборона'],
+    about:'Инструктор кикбоксинга и функциональных тренировок. Работает над физической работоспособностью, координацией и силой.',
+  },
+  {
+    name:'Айболат',
+    category:'Инструктор swim training',
+    club:'На Калдаякова',
+    clubId:'kaldayakova',
+    image:'https://images.unsplash.com/photo-1534367610401-9f5ed68180aa?auto=format&fit=crop&w=900&q=85',
+    skills:['Swim Training','Аква-тренинг','Техника плавания','Восстановление'],
+    about:'Инструктор плавания по программе Swim Training клуба на Калдаякова. Работает с техникой, выносливостью и безопасностью в воде.',
+  },
 ]
 
 export const directions = [
